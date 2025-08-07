@@ -1,5 +1,4 @@
-import boardgame.Board;
-import boardgame.Position;
+import UI.UI;
 import chess.ChessMatch;
 
 
