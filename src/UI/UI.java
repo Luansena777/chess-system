@@ -4,6 +4,10 @@ import chess.ChessPiece;
 
 
 public class UI {
+    /**
+     * Imprime o tabuleiro no console.
+     * @param pieces Matriz 8x8 representando as peças do xadrez
+     */
     public static void printBoard(ChessPiece[][] pieces) {
         for (int i = 0; i < pieces.length; i++) {
             System.out.print(8 - i + " ");
@@ -15,6 +19,7 @@ public class UI {
         System.out.println("  a b c d e f g h");
     }
 
+    //Imprime uma peça ou um traço se a posição estiver vazia.
     private static void printPiece(ChessPiece piece) {
         if (piece == null) {
             System.out.print("-");

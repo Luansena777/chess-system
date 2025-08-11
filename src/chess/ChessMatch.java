@@ -1,19 +1,22 @@
 package chess;
 
 import boardgame.Board;
-import boardgame.Position;
 import chess.pieces.King;
 import chess.pieces.Rook;
 
 public class ChessMatch {
     private Board board;
 
+    // Cria um tabuleiro 8x8 e configura as peças iniciais
     public ChessMatch() {
         this.board = new Board(8, 8);
         initialSetup();
     }
 
-    //Retorna a matriz de peças do xadrez
+    /**
+     * Retorna uma matriz com as peças atualmente no tabuleiro.
+     * Obs: Alterar essa matriz NÃO altera o tabuleiro real.
+     */
     public ChessPiece[][] getPieces() {
         ChessPiece[][] matriz = new ChessPiece[board.getRows()][board.getColumns()];
         for (int i = 0; i < board.getRows(); i++) {
@@ -23,14 +26,18 @@ public class ChessMatch {
         }
         return matriz;
     }
+    // Este metodo coloca uma peça no tabuleiro usando as coordenadas do xadrez.
+    private void placeNewPiece(char column, int row, ChessPiece piece) {
+        board.placePiece(piece, new ChessPosition(column, row).toPosition());
+    }
 
-    //Iniciar o tabuleiro com as peças no lugar inicial
-    private void initialSetup(){
-        board.PlacePiece(new Rook(board, Color.WHITE), new Position(2,1));
-        board.PlacePiece(new King(board, Color.BLACK), new Position(3,1));
+    // Coloca as peças nas posições iniciais do jogo
+    private void initialSetup() {
+        placeNewPiece('a', 1, new Rook(board, Color.WHITE));
+        placeNewPiece('e', 1, new King(board, Color.WHITE));
 
-        board.PlacePiece(new King(board, Color.WHITE), new Position(7,4));
-        board.PlacePiece(new Rook(board, Color.WHITE), new Position(7,1));
+        placeNewPiece('a', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('e', 8, new King(board, Color.BLACK));
 
     }
 }
