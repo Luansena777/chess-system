@@ -8,6 +8,8 @@ import chess.pieces.Rook;
 
 public class ChessMatch {
     private Board board;
+    private int turn = 1;
+    private Color currentePlayer = Color.WHITE;
 
     // Cria um tabuleiro 8x8 e configura as peças iniciais
     public ChessMatch() {
@@ -29,7 +31,7 @@ public class ChessMatch {
         return matriz;
     }
 
-    public boolean[][] possibleMoves(ChessPosition sourcePosition){
+    public boolean[][] possibleMoves(ChessPosition sourcePosition) {
         Position position = sourcePosition.toPosition();
         validateSourcePosition(position);
         return board.piece(position).possibleMoves();
@@ -41,6 +43,7 @@ public class ChessMatch {
         validateSourcePosition(source);
         validateTargetPosition(source, target);
         Piece capturedPiece = makeMove(source, target);
+        nextTurn();
         return (ChessPiece) capturedPiece;
     }
 
@@ -48,12 +51,16 @@ public class ChessMatch {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("Não há nenhuma peça na posição de origem");
         }
-        if (!board.piece(position).isThereAnyPossibleMove()){
+        if (currentePlayer != ((ChessPiece)board.piece(position)).getColor()){
+            throw new ChessException("A peça escolhida não é sua");
+        }
+        if (!board.piece(position).isThereAnyPossibleMove()) {
             throw new ChessException("Não existe movimentos possiveis para a peça escolhida");
         }
     }
+
     private void validateTargetPosition(Position source, Position target) {
-        if (!board.piece(source).possibleMove(target)){
+        if (!board.piece(source).possibleMove(target)) {
             throw new ChessException("A peça escolhida não pode se mover para a posição de destino");
         }
     }
@@ -87,5 +94,18 @@ public class ChessMatch {
         placeNewPiece('e', 8, new Rook(board, Color.BLACK));
         placeNewPiece('d', 8, new King(board, Color.BLACK));
 
+    }
+
+    private void nextTurn() {
+        turn++;
+        currentePlayer = (currentePlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public Color getCurrentePlayer() {
+        return currentePlayer;
     }
 }
