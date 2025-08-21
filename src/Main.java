@@ -33,7 +33,7 @@ public class Main {
 
                 ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
 
-                if (capturedPiece != null){
+                if (capturedPiece != null) {
                     captured.add(capturedPiece);
                 }
             } catch (ChessException | InputMismatchException e) {

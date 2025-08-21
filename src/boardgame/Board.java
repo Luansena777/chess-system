@@ -5,7 +5,13 @@ public class Board {
     private int columns;
     private Piece[][] pieces;
 
-    // Cria o tabuleiro com o número de linhas e colunas especificado.
+    /**
+     * Cria um tabuleiro com o número de linhas e colunas especificado.
+     *
+     * @param rows    número de linhas
+     * @param columns número de colunas
+     * @throws BoardException se as dimensões forem menores que 1
+     */
     public Board(int rows, int columns) {
         if (rows < 1 || columns < 1) {
             throw new BoardException("Erro ao criar o tabuleiro: deve haver pelo menos 1 linha e 1 coluna");
@@ -40,6 +46,13 @@ public class Board {
         piece.position = position;
     }
 
+    /**
+     * Remove e retorna a peça da posição informada.
+     *
+     * @param position posição no tabuleiro
+     * @return a peça removida ou null se não houver peça
+     * @throws BoardException se a posição não existir
+     */
     public Piece removePiece(Position position) {
         if (!positionExists(position)) {
             throw new BoardException("Posição fora do tabuleiro");

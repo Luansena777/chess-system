@@ -6,13 +6,13 @@ public abstract class Piece {
 
     public Piece(Board board) {
         this.board = board;
-
     }
 
     public abstract boolean[][] possibleMoves();
 
     /**
      * Verifica se uma posição específica é um movimento possível.
+     *
      * @param position A posição de destino que queremos verificar (linha e coluna).
      * @return 'true' se a peça pode se mover para a posição fornecida, 'false' caso contrário.
      */
@@ -22,7 +22,8 @@ public abstract class Piece {
 
     /**
      * Verifica se existe PELO MENOS UM movimento possível para a peça.
-     * * @return 'true' se houver ao menos um movimento possível, 'false' se a peça
+     *
+     * @return 'true' se houver ao menos um movimento possível, 'false' se a peça
      * estiver sem movimentos.
      */
     public boolean isThereAnyPossibleMove() {

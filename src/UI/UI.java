@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
 public class UI {
     // https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
     public static final String ANSI_RESET = "\u001B[0m";
@@ -40,6 +38,13 @@ public class UI {
         System.out.flush();
     }
 
+    /**
+     * Lê a posição de uma peça no formato padrão do xadrez (ex: "e4", "a1").
+     *
+     * @param scan Scanner para entrada de dados do usuário
+     * @return Um objeto {@link ChessPosition} representando a posição lida
+     * @throws InputMismatchException Caso o valor digitado não esteja no formato correto
+     */
     public static ChessPosition readChessPosition(Scanner scan) {
         try {
             String s = scan.nextLine();
@@ -51,13 +56,21 @@ public class UI {
         }
     }
 
+    /**
+     * Exibe o estado atual da partida, incluindo tabuleiro, peças capturadas,
+     * número do turno e jogador atual.
+     */
     public static void printMatch(ChessMatch chessMatch, List<ChessPiece> captured) {
         printBoard(chessMatch.getPieces());
         System.out.println();
         printCapturedPieces(captured);
         System.out.println();
-        System.out.println("Turn: " + chessMatch.getTurn());
-        System.out.println("Esperando jogador: " + chessMatch.getCurrentePlayer());
+        System.out.println("Turno: " + chessMatch.getTurn());
+        System.out.println("Esperando jogador: " + chessMatch.getCurrentPlayer());
+
+        if (chessMatch.getCheck()){
+            System.out.println("CHECK!");
+        }
     }
 
     /**
@@ -76,6 +89,12 @@ public class UI {
         System.out.println("  a b c d e f g h");
     }
 
+    /**
+     * Imprime o tabuleiro com destaque visual para as casas onde a peça selecionada pode se mover.
+     *
+     * @param pieces        Matriz 8x8 com as peças
+     * @param possibleMoves Matriz booleana 8x8 indicando movimentos possíveis (true = posição destacada)
+     */
     public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves) {
         for (int i = 0; i < pieces.length; i++) {
             System.out.print(8 - i + " ");
@@ -86,7 +105,6 @@ public class UI {
         }
         System.out.println("  a b c d e f g h");
     }
-
 
     //Imprime uma peça ou um traço se a posição estiver vazia.
     private static void printPiece(ChessPiece piece, boolean background) {
@@ -105,13 +123,16 @@ public class UI {
         System.out.print(" ");
     }
 
-    private static void printCapturedPieces(List<ChessPiece> captured){
+    /**
+     * Imprime as peças capturadas durante a partida, separando entre brancas e pretas.
+     *
+     * @param captured Lista de peças capturadas
+     */
+    private static void printCapturedPieces(List<ChessPiece> captured) {
         List<ChessPiece> white = captured.stream()
-                .filter(x -> x.getColor() == Color.WHITE)
-                .collect(Collectors.toList());
+                .filter(x -> x.getColor() == Color.WHITE).collect(Collectors.toList());
         List<ChessPiece> black = captured.stream()
-                .filter(x -> x.getColor() == Color.BLACK)
-                .collect(Collectors.toList());
+                .filter(x -> x.getColor() == Color.BLACK).collect(Collectors.toList());
 
         System.out.println("Peças Capturadas");
         System.out.print("White:");
