@@ -74,10 +74,11 @@ public class ChessMatch {
             throw new ChessException("Você não pode colocar-se em cheque");
         }
         check = (testCheck(opponent(currentPlayer))) ? true : false;
-        if (testcheckMate(opponent(currentPlayer))){
+        if (testcheckMate(opponent(currentPlayer))) {
             checkMate = true;
+        } else {
+            nextTurn();
         }
-        nextTurn();
         return (ChessPiece) capturedPiece;
     }
 
@@ -123,7 +124,8 @@ public class ChessMatch {
      * @return peça capturada, caso exista
      */
     private Piece makeMove(Position source, Position target) {
-        Piece p = board.removePiece(source);
+        ChessPiece p = (ChessPiece) board.removePiece(source);
+        p.increaseMoveCount();
         Piece capturedPiece = board.removePiece(target);
         board.placePiece(p, target);
 
@@ -143,7 +145,8 @@ public class ChessMatch {
      * @param capturedPiece: A peça que foi capturada durante a jogada. Se nenhuma peça foi capturada, este valor é null.
      */
     private void undoMove(Position source, Position target, Piece capturedPiece) {
-        Piece p = board.removePiece(target);
+        ChessPiece p = (ChessPiece) board.removePiece(target);
+        p.decreaseMoveCount();
         board.placePiece(p, source);
 
         if (capturedPiece != null) {
@@ -184,10 +187,13 @@ public class ChessMatch {
     }
 
     /**
-     * Determinar se o rei de um jogador está sob ataque direto de qualquer peça adversária
+     * Verifica se o rei de uma determinada cor está em situação de xeque.
+     * <p>
+     * Para isso, analisa todas as peças do adversário e verifica se alguma delas
+     * tem um movimento possível que ameace a posição atual do rei.
      *
-     * @param color: A cor do jogador que se quer verificar se está em xeque.
-     * @return true se o rei estiver em xeque; caso contrário, retorna false
+     * @param color A cor do rei a ser verificado (ex: {@code Color.WHITE} ou {@code Color.BLACK}).
+     * @return {@code true} se o rei estiver em xeque, {@code false} caso contrário.
      */
     private boolean testCheck(Color color) {
         Position kingPosition = king(color).getChessPosition().toPosition();
@@ -203,6 +209,19 @@ public class ChessMatch {
         return false;
     }
 
+    /**
+     * Verifica se o jogador de uma determinada cor está em situação de xeque-mate.
+     * <p>
+     * Uma condição de xeque-mate ocorre se o jogador está em xeque e não existe
+     * nenhum movimento legal que o tire dessa situação.
+     * O metodo primeiro verifica se o jogador está em xeque. Se estiver, ele simula
+     * todos os movimentos possíveis de todas as peças aliadas. Se nenhum desses
+     * movimentos resultar em sair do xeque, a condição de xeque-mate é confirmada.
+     *
+     * @param color A cor do jogador a ser verificado.
+     * @return {@code true} se o jogador estiver em xeque-mate, {@code false} caso contrário.
+     * @see #testCheck(Color)
+     */
     private boolean testcheckMate(Color color) {
         if (!testCheck(color)) {
             return false;
